@@ -41,3 +41,33 @@ res = .Call("cpwbart",
 if(dodraws) return(res$yhat.test+mu)
 else return(apply(res$yhat.test, 2, mean)+mu)
 }
+
+
+pwbart_b = function(
+  b, #MCMC iteration
+  x.test,		#x matrix to predict at
+  treedraws,		#$treedraws from wbart
+  mu=0,		#mean to add on
+  mc.cores=1L,         #thread count - will be ignored
+  transposed=FALSE,	
+  dodraws=TRUE,
+  nice=19L             #mc.pwbart only	
+)
+{
+  if(!transposed) x.test <- t(bartModelMatrix(x.test))
+  
+  p <- length(treedraws$cutpoints)
+  
+  if(p!=nrow(x.test))
+    stop(paste0('The number of columns in x.test must be equal to ', p))
+  cat(paste0("b = ", b))
+  
+  res = .Call("cpwbart_b",
+              b,
+              treedraws,	#trees list
+              x.test,      #the test x
+              mc.cores   	#thread count
+  )
+  if(dodraws) return(res$yhat.test+mu)
+  else return(apply(res$yhat.test, 2, mean)+mu)
+}
