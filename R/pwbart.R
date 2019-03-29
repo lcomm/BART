@@ -60,7 +60,6 @@ pwbart_b = function(
   
   if(p!=nrow(x.test))
     stop(paste0('The number of columns in x.test must be equal to ', p))
-  cat(paste0("b = ", b))
   
   res = .Call("cpwbart_b",
               b,
